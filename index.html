@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102b46">
+<title>VeriPoint QA | Address Verification</title>
+
+<style>
+:root {
+  --navy:#102b46;
+  --blue:#1769aa;
+  --green:#16845b;
+  --bg:#f3f6fa;
+  --border:#dce4ec;
+  --text:#243447;
+  --muted:#66778a;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.5;
+}
+
+header {
+  background:var(--navy);
+  color:white;
+  padding:22px 16px;
+}
+
+.header-inner,main,footer {
+  max-width:1050px;
+  margin:auto;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo {
+  display:grid;
+  place-items:center;
+  width:46px;
+  height:46px;
+  background:white;
+  color:var(--navy);
+  font-weight:800;
+  border-radius:12px;
+  font-size:20px;
+}
+
+h1 {font-size:23px;margin:0}
+.subtitle {color:#d5e5f4;margin:4px 0 0;font-size:13px}
+
+main {padding:20px 14px 36px}
+
+.notice {
+  background:#fff7df;
+  border:1px solid #eed58c;
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13px;
+  margin-bottom:18px;
+}
+
+.hero {margin-bottom:20px}
+.hero h2 {margin:0 0 5px;font-size:25px;color:var(--navy)}
+.hero p {margin:0;color:var(--muted)}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0;
+}
+
+.stat,.card {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+}
+
+.stat-label {color:var(--muted);font-size:12px}
+.stat-value {font-size:27px;font-weight:800;margin-top:4px;color:var(--navy)}
+.stat-detail {color:var(--muted);font-size:11px}
+
+.layout {display:grid;grid-template-columns:1fr;gap:16px}
+
+.card h3 {margin:0 0 5px;font-size:18px;color:var(--navy)}
+.card-intro {color:var(--muted);font-size:13px;margin:0 0 18px}
+
+label {
+  display:block;
+  font-weight:700;
+  font-size:13px;
+  margin:13px 0 6px;
+}
+
+input,select,textarea {
+  width:100%;
+  border:1px solid #cbd6e1;
+  background:white;
+  padding:11px;
+  border-radius:7px;
+  font:inherit;
+  font-size:14px;
+  color:var(--text);
+}
+
+input:focus,select:focus,textarea:focus {
+  outline:2px solid #a8d2f4;
+  border-color:var(--blue);
+}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0 12px;
+}
+
+.help {font-size:11px;color:var(--muted);margin-top:4px}
+
+button {
+  border:0;
+  border-radius:7px;
+  padding:11px 14px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:focus-visible {
+  outline:3px solid #88bff0;
+  outline-offset:2px;
+}
+
+.primary {
+  background:var(--blue);
+  color:white;
+  width:100%;
+  margin-top:18px;
+}
+
+.primary:hover {background:#0d548e}
+.secondary {background:#e8f0f7;color:var(--navy)}
+.danger {background:#fff0f0;color:#a32323}
+
+.button-row {display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+.result {
+  display:none;
+  margin-top:16px;
+  border-radius:9px;
+  padding:13px;
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+
+.result.success {display:block;background:#e8f7ef;border:1px solid #a5d9bb}
+.result.warning {display:block;background:#fff7df;border:1px solid #eed58c}
+.result.error {display:block;background:#fff0f0;border:1px solid #efb8b8}
+.result h4 {margin:0 0 5px;font-size:15px}
+
+.checks {padding-left:19px;margin:10px 0 0}
+.checks li {margin:5px 0}
+
+.map-placeholder {
+  border:1px solid var(--border);
+  background:#f0f5ed;
+  min-height:145px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:#42654a;
+  padding:16px;
+  font-size:13px;
+  margin-top:12px;
+}
+
+.table-wrap {overflow-x:auto;margin-top:14px}
+table {border-collapse:collapse;width:100%;min-width:650px;font-size:12px}
+th,td {padding:10px 9px;text-align:left;border-bottom:1px solid var(--border)}
+th {background:#f2f6fa;color:var(--navy)}
+
+.badge {
+  display:inline-block;
+  border-radius:20px;
+  padding:4px 8px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.badge.verified {background:#e2f5e9;color:#11683f}
+.badge.review {background:#fff0ce;color:#875600}
+.badge.invalid {background:#ffe5e5;color:#a32323}
+
+.empty {
+  color:var(--muted);
+  text-align:center;
+  padding:22px 8px;
+  font-size:13px;
+}
+
+.steps {display:grid;gap:12px;margin-top:14px}
+.step {background:#f6f9fc;border-radius:8px;padding:12px}
+.step strong {display:block;color:var(--navy);margin-bottom:3px}
+.step span {color:var(--muted);font-size:12px}
+
+footer {
+  padding:0 16px 25px;
+  color:var(--muted);
+  font-size:11px;
+  text-align:center;
+}
+
+@media(min-width:650px) {
+  .stats {grid-template-columns:repeat(4,minmax(0,1fr))}
+  .layout {grid-template-columns:1.15fr .85fr;align-items:start}
+  .form-grid {grid-template-columns:1fr 1fr}
+  h1 {font-size:27px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header-inner">
+<div class="brand">
+<div class="logo">VP</div>
+<div>
+<h1>VeriPoint QA</h1>
+<p class="subtitle">Digital Postcode & Merchant Address Verification</p>
+</div>
+</div>
+</div>
+</header>
+
+<main>
+
+<div class="notice">
+<strong>Prototype notice:</strong>
+This demonstration uses mock data and simulated rules.
+It is not connected to NIPOST, banks, payment providers or live GPS services.
+All verification results are illustrative only.
+</div>
+
+<section class="hero">
+<h2>Verify the address. Improve trust.</h2>
+<p>A concept for helping merchants and service providers capture, check and review address information before onboarding.</p>
+</section>
+
+<section class="stats">
+<div class="stat">
+<div class="stat-label">Total checks</div>
+<div class="stat-value" id="totalStat">0</div>
+<div class="stat-detail">All demo checks</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">Verified (mock)</div>
+<div class="stat-value" id="verifiedStat">0</div>
+<div class="stat-detail">Passed demo rules</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">Needs review</div>
+<div class="stat-value" id="reviewStat">0</div>
+<div class="stat-detail">Requires review</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">Invalid input</div>
+<div class="stat-value" id="invalidStat">0</div>
+<div class="stat-detail">Failed input checks</div>
+</div>
+</section>
+
+<div class="layout">
+
+<section class="card">
+<h3>Merchant address check</h3>
+<p class="card-intro">Enter sample merchant details to run the demonstration QA checks.</p>
+
+<form id="verifyForm">
+
+<div class="form-grid">
+<div>
+<label for="merchant">Merchant / business name *</label>
+<input id="merchant" required maxlength="100" placeholder="e.g. Sunrise Stores">
+</div>
+
+<div>
+<label for="reference">Merchant reference *</label>
+<input id="reference" required maxlength="50" placeholder="e.g. MRC-001">
+</div>
+</div>
+
+<label for="address">Street address *</label>
+<textarea id="address" required maxlength="250" rows="3" placeholder="House number, street, area or landmark"></textarea>
+
+<div class="form-grid">
+<div>
+<label for="postcode">Digital postcode *</label>
+<input id="postcode" required maxlength="30" placeholder="Enter test postcode">
+<div class="help">No live postcode lookup is performed.</div>
+</div>
+
+<div>
+<label for="state">State *</label>
+<select id="state" required>
+<option value="">Select state</option>
+<option>Abia</option><option>Adamawa</option>
+<option>Akwa Ibom</option><option>Anambra</option>
+<option>Bauchi</option><option>Bayelsa</option>
+<option>Benue</option><option>Borno</option>
+<option>Cross River</option><option>Delta</option>
+<option>Ebonyi</option><option>Edo</option>
+<option>Ekiti</option><option>Enugu</option>
+<option>FCT</option><option>Gombe</option>
+<option>Imo</option><option>Jigawa</option>
+<option>Kaduna</option><option>Kano</option>
+<option>Katsina</option><option>Kebbi</option>
+<option>Kogi</option><option>Kwara</option>
+<option>Lagos</option><option>Nasarawa</option>
+<option>Niger</option><option>Ogun</option>
+<option>Ondo</option><option>Osun</option>
+<option>Oyo</option><option>Plateau</option>
+<option>Rivers</option><option>Sokoto</option>
+<option>Taraba</option><option>Yobe</option>
+<option>Zamfara</option>
+</select>
+</div>
+
+<div>
+<label for="lga">Local Government Area *</label>
+<input id="lga" required maxlength="80" placeholder="e.g. Ughelli South">
+</div>
+
+<div>
+<label for="gps">Location comparison (demo)</label>
+<select id="gps">
+<option value="match">Simulated location matches</option>
+<option value="mismatch">Simulated location differs</option>
+<option value="unknown">Location unavailable</option>
+</select>
+</div>
+</div>
+
+<button class="primary" type="submit">Run address QA check</button>
+</form>
+
+<div id="result" class="result" role="status" aria-live="polite"></div>
+</section>
+
+<aside>
+
+<section class="card">
+<h3>Illustrative location panel</h3>
+<p class="card-intro">Placeholder for a future postcode map or location service.</p>
+
+<div class="map-placeholder">
+<div>
+<div style="font-size:28px">⌖</div>
+<strong>Location preview unavailable</strong><br>
+<span>No live map or GPS lookup is connected.</span>
+</div>
+</div>
+</section>
+
+<section class="card" style="margin-top:16px">
+<h3>Proposed verification workflow</h3>
+
+<div class="steps">
+<div class="step">
+<strong>1. Capture</strong>
+<span>Collect merchant identity and address fields.</span>
+</div>
+
+<div class="step">
+<strong>2. Validate</strong>
+<span>Check required fields and basic formatting.</span>
+</div>
+
+<div class="step">
+<strong>3. Compare</strong>
+<span>Compare submitted postcode and location against an authorised source in a future integration.</span>
+</div>
+
+<div class="step">
+<strong>4. Review</strong>
+<span>Flag mismatches for human review before a decision is made.</span>
+</div>
+</div>
+</section>
+
+</aside>
+</div>
+
+<section class="card" style="margin-top:16px">
+<h3>Verification history</h3>
+<p class="card-intro">Records are stored in this browser only.</p>
+
+<div class="button-row">
+<button class="secondary" id="exportBtn" type="button">Export CSV</button>
+<button class="danger" id="clearBtn" type="button">Clear history</button>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date / time</th>
+<th>Merchant</th>
+<th>Reference</th>
+<th>State / LGA</th>
+<th>Demo result</th>
+<th>QA notes</th>
+</tr>
+</thead>
+<tbody id="historyBody"></tbody>
+</table>
+
+<div class="empty" id="emptyState">
+No checks yet. Submit the form to create your first demo record.
+</div>
+</div>
+</section>
+
+<section class="card" style="margin-top:16px">
+<h3>Quality assurance checks demonstrated</h3>
+<ul class="checks">
+<li>Required-field validation before submission.</li>
+<li>Basic postcode and address input checks.</li>
+<li>Simulated location match, mismatch and unavailable scenarios.</li>
+<li>Clear outcome categories and review notes.</li>
+<li>Dashboard statistics and verification history.</li>
+<li>CSV export and browser-based record storage.</li>
+<li>Separation between prototype results and authoritative verification.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+VeriPoint QA · Concept prototype · Mock data only · Not an official NIPOST product or live verification service.
+</footer>
+
+<script>
+(function() {
+"use strict";
+
+const STORAGE_KEY = "veripoint_qa_history_v1";
+
+const form = document.getElementById("verifyForm");
+const resultBox = document.getElementById("result");
+const historyBody = document.getElementById("historyBody");
+const emptyState = document.getElementById("emptyState");
+
+let history = [];
+
+try {
+const saved = localStorage.getItem(STORAGE_KEY);
+if (saved) {
+const parsed = JSON.parse(saved);
+if (Array.isArray(parsed)) history = parsed;
+}
+} catch(error) {
+history = [];
+}
+
+function escapeHTML(value) {
+return String(value).replace(/[&<>"']/g, function(character) {
+return {
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[character];
+});
+}
+
+function saveHistory() {
+try {
+localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+} catch(error) {
+showResult("warning","Storage unavailable","Your browser could not save the history.");
+}
+}
+
+function showResult(type,title,message) {
+resultBox.className = "result " + type;
+resultBox.innerHTML =
+"<h4>" + escapeHTML(title) + "</h4><div>" +
+escapeHTML(message) + "</div>";
+}
+
+function evaluateRecord(data) {
+const postcode = data.postcode.trim();
+const address = data.address.trim();
+
+if(postcode.length < 3 || !/[A-Za-z0-9]/.test(postcode)) {
+return {
+status:"INVALID INPUT",
+notes:"Postcode is too short or has an invalid format."
+};
+}
+
+if(address.length < 8) {
+return {
+status:"INVALID INPUT",
+notes:"Address is too short. Provide more location detail."
+};
+}
+
+let notes = [];
+
+if(data.gps === "mismatch") {
+notes.push("Simulated location mismatch.");
+} else if(data.gps === "unknown") {
+notes.push("Location comparison unavailable.");
+} else {
+notes.push("Simulated location match.");
+}
+
+if(data.gps !== "match") {
+return {
+status:"NEEDS REVIEW",
+notes:notes.join(" ")
+};
+}
+
+return {
+status:"VERIFIED (MOCK)",
+notes:"Required fields passed demo rules. " +
+notes.join(" ") +
+" This is not an authoritative postcode verification."
+};
+}
+
+function updateStats() {
+document.getElementById("totalStat").textContent = history.length;
+
+document.getElementById("verifiedStat").textContent =
+history.filter(item => item.status === "VERIFIED (MOCK)").length;
+
+document.getElementById("reviewStat").textContent =
+history.filter(item => item.status === "NEEDS REVIEW").length;
+
+document.getElementById("invalidStat").textContent =
+history.filter(item => item.status === "INVALID INPUT").length;
+}
+
+function badgeClass(status) {
+if(status === "VERIFIED (MOCK)") return "verified";
+if(status === "NEEDS REVIEW") return "review";
+return "invalid";
+}
+
+function renderHistory() {
+historyBody.innerHTML = "";
+emptyState.style.display = history.length ? "none" : "block";
+
+history.forEach(function(item) {
+const row = document.createElement("tr");
+
+[
+item.time,
+item.merchant,
+item.reference,
+item.state + " / " + item.lga
+].forEach(function(value) {
+const cell = document.createElement("td");
+cell.textContent = value;
+row.appendChild(cell);
+});
+
+const statusCell = document.createElement("td");
+const badge = document.createElement("span");
+
+badge.className = "badge " + badgeClass(item.status);
+badge.textContent = item.status;
+
+statusCell.appendChild(badge);
+row.appendChild(statusCell);
+
+const notesCell = document.createElement("td");
+notesCell.textContent = item.notes;
+row.appendChild(notesCell);
+
+historyBody.appendChild(row);
+});
+
+updateStats();
+}
+
+form.addEventListener("submit",function(event) {
+event.preventDefault();
+
+const data = {
+merchant:document.getElementById("merchant").value.trim(),
+reference:document.getElementById("reference").value.trim(),
+address:document.getElementById("address").value.trim(),
+postcode:document.getElementById("postcode").value.trim(),
+state:document.getElementById("state").value,
+lga:document.getElementById("lga").value.trim(),
+gps:document.getElementById("gps").value
+};
+
+if(!data.merchant || !data.reference || !data.address ||
+!data.postcode || !data.state || !data.lga) {
+showResult("error","Missing information","Complete all required fields.");
+return;
+}
+
+const outcome = evaluateRecord(data);
+
+const record = {
+time:new Date().toLocaleString(),
+merchant:data.merchant,
+reference:data.reference,
+address:data.address,
+postcode:data.postcode,
+state:data.state,
+lga:data.lga,
+status:outcome.status,
+notes:outcome.notes
+};
+
+history.unshift(record);
+saveHistory();
+renderHistory();
+
+const type =
+outcome.status === "VERIFIED (MOCK)" ? "success" :
+outcome.status === "NEEDS REVIEW" ? "warning" : "error";
+
+showResult(type,outcome.status,outcome.notes);
+});
+
+document.getElementById("exportBtn").addEventListener("click",function() {
+if(!history.length) {
+showResult("warning","Nothing to export","Run at least one demo check first.");
+return;
+}
+
+const columns = [
+"time","merchant","reference","address","postcode",
+"state","lga","status","notes"
+];
+
+function csvValue(value) {
+let text = String(value == null ? "" : value);
+if(/^[=+\-@\t\r]/.test(text)) text = "'" + text;
+return '"' + text.replace(/"/g,'""') + '"';
+}
+
+const csv = [
+columns.join(","),
+...history.map(record =>
+columns.map(key => csvValue(record[key])).join(",")
+)
+].join("\r\n");
+
+const blob = new Blob(["\uFEFF" + csv], {
+type:"text/csv;charset=utf-8;"
+});
+
+const url = URL.createObjectURL(blob);
+const link = document.createElement("a");
+
+link.href = url;
+link.download = "veripoint-qa-history.csv";
+
+document.body.appendChild(link);
+link.click();
+link.remove();
+
+URL.revokeObjectURL(url);
+});
+
+document.getElementById("clearBtn").addEventListener("click",function() {
+if(!history.length) {
+showResult("warning","History is already empty","There are no records to clear.");
+return;
+}
+
+if(!window.confirm("Clear all saved demo history? This cannot be undone.")) return;
+
+history = [];
+
+try {
+localStorage.removeItem(STORAGE_KEY);
+} catch(error) {}
+
+renderHistory();
+resultBox.className = "result";
+resultBox.innerHTML = "";
+});
+
+renderHistory();
+
+})();
+</script>
+
+</body>
+</html>
